@@ -7,7 +7,6 @@ import requests
 import json
 import time
 
-# yaml 대신 settings.py 사용
 from config.settings import (
     APP_KEY,
     APP_SECRET,
@@ -25,7 +24,6 @@ def get_access_token():
     """
     OAuth 인증 > 접근토큰발급 (client_credentials 방식)
     - 발급받은 토큰과 만료 시간을 반환
-    - settings.py의 global 변수를 갱신하거나, 필요하면 호출자가 받아서 쓸 수도 있음
     """
     headers = {"content-type": "application/json"}
     body = {
@@ -36,7 +34,7 @@ def get_access_token():
     PATH = "oauth2/tokenP"
     URL = f"{URL_BASE}/{PATH}"
 
-    time.sleep(0.1)  # 유량제한 예방 (REST: 1초에 20건)
+    time.sleep(0.1)
     res = requests.post(URL, headers=headers, data=json.dumps(body))
 
     if res.status_code == 200:
@@ -59,11 +57,11 @@ def get_access_token():
 # 2. 해외 주식 분봉 조회 API
 ###################################
 def call_overseas_minute_api(
-        exc_code,  # 거래소 코드 (NAS, NYS, AMS 등)
-        sym_code,  # 심볼(종목코드, 예: TSLA)
-        nmin,  # 분봉 주기 (1, 5, 10 등)
-        keyb="",  # 다음 조회용 시간 키
-        next_value="",  # 다음 페이지를 조회하기 위한 next값
+        exc_code,
+        sym_code,
+        nmin,
+        keyb="",
+        next_value="",
         access_token=""
 ):
     """
@@ -76,12 +74,12 @@ def call_overseas_minute_api(
 
     params = {
         "AUTH": "",
-        "EXCD": exc_code,  # 거래소 코드 (예: NAS)
-        "SYMB": sym_code,  # 종목 코드 (예: TSLA)
-        "NMIN": nmin,  # 분봉 주기
+        "EXCD": exc_code,
+        "SYMB": sym_code,
+        "NMIN": nmin,
         "PINC": "1",
-        "NEXT": next_value,  # 페이징
-        "NREC": "120",  # 조회 레코드 개수 (최대 120개)
+        "NEXT": next_value,
+        "NREC": "120",
         "FILL": "",
         "KEYB": keyb
     }
@@ -95,12 +93,11 @@ def call_overseas_minute_api(
         'custtype': 'P'
     }
 
-    time.sleep(0.1)  # 유량제한
+    time.sleep(0.1)  #
     response = requests.get(URL, headers=headers, params=params)
 
     if response.status_code == 200:
         data = response.json()
-        # print("API 호출 성공:", data)
         return data
     else:
         print(f"[오류] API 호출 실패, 상태 코드: {response.status_code}")

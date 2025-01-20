@@ -160,7 +160,6 @@ def generate_signals(df: pd.DataFrame) -> pd.DataFrame:
       - BUY: (EMA10 > EMA20) & (RSI14 < 70) & (MACD > MACD_SIGNAL) & (MOM10 > 0)
       - SELL: (EMA10 < EMA20) | (RSI14 > 70) | (MACD < MACD_SIGNAL) | (MOM10 < 0)
       - HOLD: 그 외
-    추가로 EMA50을 '장기 추세'로 활용할 수도 있음
     """
     df = df.copy()
     df["signal"] = "HOLD"
